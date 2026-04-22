@@ -29,6 +29,8 @@ select {
   height: 100vh;
   height: 100dvh;
   margin: 0;
+  padding-block: 20px;
+  padding-inline: 12px;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -39,8 +41,8 @@ select {
 
 .deviceShell {
   position: relative;
-  width: min(calc(100dvh * 9 / 16), 100vw);
-  height: min(100dvh, calc(100vw * 16 / 9));
+  width: min(calc((100dvh - 40px) * 9 / 16), calc(100vw - 24px));
+  height: min(calc(100dvh - 40px), calc((100vw - 24px) * 16 / 9));
   aspect-ratio: 9 / 16;
   padding: 12px;
 }
