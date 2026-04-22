@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <title>Unity Web Player | Horizontal Slider</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #111111;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+      }
+
+      .unity-shell {
+        position: relative;
+        width: min(100vw, 56.25vh);
+        width: min(100vw, 56.25dvh);
+        height: min(100vh, 177.7778vw);
+        height: min(100dvh, 177.7778vw);
+        aspect-ratio: 9 / 16;
+        overflow: hidden;
+        background: #231f20;
+      }
+
+      #unity-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: #231f20;
+      }
+
+      .buffer-loader {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: #ffffff;
+        background: #111111;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: opacity 240ms ease, visibility 240ms ease;
+      }
+
+      .buffer-loader.is-hidden {
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      .buffer-loader__content {
+        width: min(72%, 320px);
+        text-align: center;
+      }
+
+      .buffer-loader__label {
+        margin-bottom: 12px;
+        font-size: 14px;
+        line-height: 1.4;
+        letter-spacing: 0;
+      }
+
+      .buffer-loader__track {
+        width: 100%;
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .buffer-loader__bar {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: #ffffff;
+        transform: scaleX(var(--progress, 0.04));
+        transform-origin: left center;
+        transition: transform 160ms ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="unity-shell">
+      <canvas id="unity-canvas" width=1080 height=1920 tabindex="-1"></canvas>
+      <div id="buffer-loader" class="buffer-loader" role="status" aria-live="polite">
+        <div class="buffer-loader__content">
+          <div id="buffer-loader-label" class="buffer-loader__label">Loading 0%</div>
+          <div class="buffer-loader__track" aria-hidden="true">
+            <div id="buffer-loader-bar" class="buffer-loader__bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="Build/Build.loader.js"></script>
+    <script>
+      var loader = document.querySelector("#buffer-loader");
+      var loaderBar = document.querySelector("#buffer-loader-bar");
+      var loaderLabel = document.querySelector("#buffer-loader-label");
+
+      function setLoadingProgress(progress) {
+        var clampedProgress = Math.max(0.04, Math.min(progress || 0, 1));
+        var percent = Math.round(clampedProgress * 100);
+
+        loaderBar.style.setProperty("--progress", clampedProgress);
+        loaderLabel.textContent = "Loading " + percent + "%";
+      }
+
+      function hideLoader() {
+        setLoadingProgress(1);
+        loader.classList.add("is-hidden");
+      }
+
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        arguments: [],
+        dataUrl: "Build/Build.data.br",
+        frameworkUrl: "Build/Build.framework.js.br",
+        codeUrl: "Build/Build.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Horizontal Slider",
+        productVersion: "0.1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      }, setLoadingProgress).then((unityInstance) => {
+        hideLoader();
+      }).catch((message) => {
+        loaderLabel.textContent = "Unable to load";
+        alert(message);
+      });
+    </script>
+  </body>
+</html>
