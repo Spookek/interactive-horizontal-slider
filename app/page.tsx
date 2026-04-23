@@ -62,6 +62,7 @@ export default function Home() {
   });
   const [activeVideo, setActiveVideo] = useState<Hotspot | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isClosingVideo, setIsClosingVideo] = useState(false);
 
   useEffect(() => {
     if (!activeVideo || !videoRef.current) {
@@ -92,16 +93,30 @@ export default function Home() {
   }, [activeVideo]);
 
   const openVideo = (hotspot: Hotspot) => {
+    setIsClosingVideo(false);
     setActiveVideo(hotspot);
   };
 
   const closeVideo = () => {
+    if (!activeVideo || isClosingVideo) {
+      return;
+    }
+
     if (videoRef.current) {
       videoRef.current.pause();
     }
 
+    setIsClosingVideo(true);
+  };
+
+  const handlePlayerShellAnimationEnd = () => {
+    if (!isClosingVideo) {
+      return;
+    }
+
     setActiveVideo(null);
     setIsPaused(false);
+    setIsClosingVideo(false);
   };
 
   const togglePlayback = () => {
@@ -242,8 +257,15 @@ export default function Home() {
         </section>
 
         {activeVideo ? (
-          <div className="playerOverlay" role="dialog" aria-modal="true">
-            <div className="playerShell">
+          <div
+            className={`playerOverlay ${isClosingVideo ? "isClosing" : ""}`}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div
+              className={`playerShell ${isClosingVideo ? "isClosing" : ""}`}
+              onAnimationEnd={handlePlayerShellAnimationEnd}
+            >
               <video
                 ref={videoRef}
                 key={activeVideo.videoSrc}

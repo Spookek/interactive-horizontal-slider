@@ -22,6 +22,13 @@ input,
 textarea,
 select {
   font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .page {
@@ -172,6 +179,11 @@ select {
   background: rgba(3, 3, 3, 0.8);
   backdrop-filter: blur(14px);
   border-radius: 0px;
+  animation: playerOverlayFadeIn 360ms ease-out;
+}
+
+.playerOverlay.isClosing {
+  animation: playerOverlayFadeOut 240ms ease-in forwards;
 }
 
 .playerShell {
@@ -182,6 +194,12 @@ select {
   overflow: hidden;
   background: #000;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+  animation: playerShellEnter 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.playerShell.isClosing {
+  animation: playerShellExit 240ms cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 .playerVideo {
@@ -227,6 +245,59 @@ select {
   100% {
     transform: scale(1.15);
     opacity: 0;
+  }
+}
+
+@keyframes playerOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes playerOverlayFadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes playerShellEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes playerShellExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playerOverlay,
+  .playerOverlay.isClosing,
+  .playerShell,
+  .playerShell.isClosing {
+    animation: none;
   }
 }
 
@@ -297,5 +368,14 @@ select {
   .playerButton {
     min-width: clamp(88px, 15dvh, 110px);
     padding: clamp(10px, 1.6dvh, 14px) clamp(12px, 2dvh, 18px);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button:focus,
+  a:focus,
+  [role="button"]:focus {
+    outline: none;
+    box-shadow: none;
   }
 }
