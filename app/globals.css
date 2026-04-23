@@ -50,7 +50,7 @@ select {
 .deviceBezel {
   position: absolute;
   inset: 0;
-  border-radius: 34px;
+  border-radius: 0px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
   box-shadow:
     0 30px 60px rgba(0, 0, 0, 0.45),
@@ -64,7 +64,7 @@ select {
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  border-radius: 28px;
+  border-radius: 0px;
   scrollbar-width: none;
   background: #121212;
   touch-action: pan-x pinch-zoom;
@@ -171,14 +171,14 @@ select {
   padding: 12px;
   background: rgba(3, 3, 3, 0.8);
   backdrop-filter: blur(14px);
-  border-radius: 28px;
+  border-radius: 0px;
 }
 
 .playerShell {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 28px;
+  border-radius: 0px;
   overflow: hidden;
   background: #000;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
@@ -231,10 +231,21 @@ select {
 }
 
 @media (max-width: 640px) {
+  .page {
+    --mobile-shell-margin: clamp(10px, 2svh, 16px);
+    padding: var(--mobile-shell-margin);
+  }
+
   .deviceShell {
-    width: 100vw;
-    height: 100dvh;
-    padding: 0;
+    width: min(
+      calc((100svh - (2 * var(--mobile-shell-margin))) * 9 / 16),
+      calc(100vw - (2 * var(--mobile-shell-margin)))
+    );
+    height: min(
+      calc(100svh - (2 * var(--mobile-shell-margin))),
+      calc((100vw - (2 * var(--mobile-shell-margin))) * 16 / 9)
+    );
+    padding: clamp(0px, 1.2dvh, 8px);
   }
 
   .deviceBezel,
@@ -248,14 +259,43 @@ select {
     padding: 0;
   }
 
+  .hotspot {
+    width: clamp(44px, 7.4dvh, 66px);
+    height: clamp(44px, 7.4dvh, 66px);
+  }
+
+  .hotspot::after {
+    inset: clamp(6px, 1.1dvh, 10px);
+  }
+
+  .hotspotInner {
+    width: clamp(10px, 1.8dvh, 16px);
+    height: clamp(10px, 1.8dvh, 16px);
+  }
+
+  .returnButton,
+  .playerButton {
+    font-size: clamp(0.78rem, 1.65dvh, 0.95rem);
+  }
+
+  .returnButton {
+    padding: clamp(10px, 1.6dvh, 14px) clamp(14px, 2.2dvh, 20px);
+  }
+
   .returnButtonInline {
-    right: 16px;
-    bottom: 16px;
+    right: clamp(10px, 2dvh, 16px);
+    bottom: clamp(10px, 2dvh, 16px);
   }
 
   .playerControls {
-    bottom: 14px;
-    left: 14px;
-    right: 14px;
+    bottom: clamp(10px, 1.8dvh, 14px);
+    left: clamp(10px, 1.8dvh, 14px);
+    right: clamp(10px, 1.8dvh, 14px);
+    gap: clamp(8px, 1.3dvh, 12px);
+  }
+
+  .playerButton {
+    min-width: clamp(88px, 15dvh, 110px);
+    padding: clamp(10px, 1.6dvh, 14px) clamp(12px, 2dvh, 18px);
   }
 }
